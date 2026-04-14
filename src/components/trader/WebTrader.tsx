@@ -75,7 +75,7 @@ export default function WebTrader() {
   }, [])
 
   return (
-    <div className="h-screen w-screen bg-[#080c17] flex flex-col overflow-hidden select-none" style={{ fontFeatureSettings: '"tnum"' }}>
+    <div className="h-screen w-screen bg-[#080c17] flex flex-col overflow-hidden select-none pb-14 md:pb-0" style={{ fontFeatureSettings: '"tnum"' }}>
       <TraderTopBar />
       <NotificationToasts />
 

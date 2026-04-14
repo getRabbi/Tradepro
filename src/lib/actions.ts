@@ -10,9 +10,9 @@ export async function registerAction(formData: {
   sourceOfFunds?: string; experience?: string; riskAck?: boolean; displayName?: string;
 }) {
   try {
-    // Check existing
-    const { data: existing } = await supabase.from('users').select('id').eq('email', formData.email).single()
-    if (existing) return { error: 'An account with this email already exists.' }
+    // Check existing - use select + limit instead of .single() which throws on no match
+    const { data: existingUsers } = await supabase.from('users').select('id').eq('email', formData.email).limit(1)
+    if (existingUsers && existingUsers.length > 0) return { error: 'An account with this email already exists.' }
 
     const passwordHash = await hashPassword(formData.password)
     const userId = crypto.randomUUID()
@@ -74,7 +74,8 @@ export async function registerAction(formData: {
 // ============= LOGIN =============
 export async function loginAction(email: string, password: string) {
   try {
-    const { data: user, error } = await supabase.from('users').select('*').eq('email', email).single()
+    const { data: users, error } = await supabase.from('users').select('*').eq('email', email).order('created_at', { ascending: false }).limit(1)
+    const user = users?.[0]
     if (error || !user) return { error: 'Invalid email or password.' }
 
     const valid = await verifyPassword(password, user.password_hash)

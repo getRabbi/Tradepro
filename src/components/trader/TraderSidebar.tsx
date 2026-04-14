@@ -474,6 +474,7 @@ export default function TraderSidebar() {
 
   return (
     <>
+      {/* Desktop sidebar */}
       <div className="w-16 bg-surface-800/80 border-r border-white/[0.04] flex flex-col items-center py-3 shrink-0 hidden md:flex">
         <div className="flex-1 space-y-1 w-full px-1.5">{sideItems.map((item) => (<button key={item.key} onClick={() => toggle(item.key)} className={`w-full flex flex-col items-center gap-0.5 py-2.5 rounded-lg transition-all group ${panel === item.key ? 'bg-brand-500/10 text-brand-400' : 'text-text-muted hover:text-brand-400 hover:bg-brand-500/5'}`} title={item.label}><item.icon size={18} /><span className="text-[8px] leading-tight text-center opacity-70 group-hover:opacity-100">{item.label}</span></button>))}</div>
         <a href="/client-area/dashboard" className="w-full px-1.5 mb-2 cursor-pointer hover:opacity-80 transition-all" title="Go to Dashboard"><div className="py-2 text-center border-t border-white/[0.06]"><div className="w-8 h-8 rounded-full bg-brand-500/15 flex items-center justify-center mx-auto mb-1"><span className="text-xs font-bold text-brand-400">{displayName.charAt(0)}</span></div><p className="text-[7px] text-text-muted leading-tight truncate">{displayName}</p><p className="text-[8px] font-mono font-bold text-accent-green mt-0.5">${balance.toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p></div></a>
@@ -483,7 +484,32 @@ export default function TraderSidebar() {
           {showLang && (<div className="absolute bottom-full left-full ml-1 mb-1 bg-surface-700/95 backdrop-blur-xl border border-white/[0.08] rounded-xl shadow-2xl py-1.5 min-w-[140px] animate-slide-down z-50">{languages.map((l) => (<button key={l.code} onClick={() => { changeLang(l); setShowLang(false) }} className={`w-full flex items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors ${lang.code === l.code ? 'bg-brand-500/10 text-brand-300' : 'text-text-secondary hover:bg-white/[0.04]'}`}><span className="text-base">{l.flag}</span><span>{l.label}</span></button>))}</div>)}
         </div>
       </div>
+
+      {/* Desktop panel */}
       {Panel && (<div className="w-[300px] bg-surface-800/95 backdrop-blur-xl border-r border-white/[0.04] p-5 overflow-y-auto hidden md:block z-30"><Panel onClose={() => setPanel(null)} /></div>)}
+
+      {/* Mobile bottom nav */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-surface-800/98 backdrop-blur-xl border-t border-white/[0.06]">
+        <div className="flex items-center justify-around py-1.5">
+          {sideItems.map((item) => (
+            <button key={item.key} onClick={() => toggle(item.key)} className={`flex flex-col items-center gap-0.5 py-1.5 px-2 rounded-lg transition-all ${panel === item.key ? 'text-brand-400' : 'text-text-muted/50'}`}>
+              <item.icon size={18} />
+              <span className="text-[8px]">{item.label}</span>
+            </button>
+          ))}
+          <a href="/client-area/dashboard" className="flex flex-col items-center gap-0.5 py-1.5 px-2 text-text-muted/50">
+            <BarChart3 size={18} />
+            <span className="text-[8px]">Dashboard</span>
+          </a>
+        </div>
+      </div>
+
+      {/* Mobile fullscreen panel */}
+      {Panel && (
+        <div className="fixed inset-0 z-50 md:hidden bg-surface-900/98 backdrop-blur-xl overflow-y-auto p-5 pt-4">
+          <Panel onClose={() => setPanel(null)} />
+        </div>
+      )}
     </>
   )
 }
